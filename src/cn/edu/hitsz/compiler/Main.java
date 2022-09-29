@@ -49,13 +49,13 @@ public class Main {
         final var productionCollector = new ProductionCollector(GrammarInfo.getBeginProduction());
         parser.registerObserver(productionCollector);
 
-        // 加入用作语义检查的 Observer
-        final var semanticAnalyzer = new SemanticAnalyzer();
-        parser.registerObserver(semanticAnalyzer);
-
-        // 加入用作 IR 生成的 Observer
-        final var irGenerator = new IRGenerator();
-        parser.registerObserver(irGenerator);
+//        // 加入用作语义检查的 Observer
+//        final var semanticAnalyzer = new SemanticAnalyzer();
+//        parser.registerObserver(semanticAnalyzer);
+//
+//        // 加入用作 IR 生成的 Observer
+//        final var irGenerator = new IRGenerator();
+//        parser.registerObserver(irGenerator);
 
         // 执行语法解析并在解析过程中依次调用各 Observer
         parser.run();
@@ -63,17 +63,17 @@ public class Main {
         // 各 Observer 输出结果
         productionCollector.dumpToFile(FilePathConfig.PARSER_PATH);
         symbolTable.dumpTable(FilePathConfig.NEW_SYMBOL_TABLE);
-        final var instructions = irGenerator.getIR();
-        irGenerator.dumpIR(FilePathConfig.INTERMEDIATE_CODE_PATH);
-
-        // 模拟执行 IR 并输出结果
-        final var emulator = IREmulator.load(instructions);
-        FileUtils.writeFile(FilePathConfig.EMULATE_RESULT, emulator.execute().map(Objects::toString).orElse("No return value"));
-
-        // 由 IR 生成汇编
-        final var asmGenerator = new AssemblyGenerator();
-        asmGenerator.loadIR(instructions);
-        asmGenerator.run();
-        asmGenerator.dump(FilePathConfig.ASSEMBLY_LANGUAGE_PATH);
+//        final var instructions = irGenerator.getIR();
+//        irGenerator.dumpIR(FilePathConfig.INTERMEDIATE_CODE_PATH);
+//
+//        // 模拟执行 IR 并输出结果
+//        final var emulator = IREmulator.load(instructions);
+//        FileUtils.writeFile(FilePathConfig.EMULATE_RESULT, emulator.execute().map(Objects::toString).orElse("No return value"));
+//
+//        // 由 IR 生成汇编
+//        final var asmGenerator = new AssemblyGenerator();
+//        asmGenerator.loadIR(instructions);
+//        asmGenerator.run();
+//        asmGenerator.dump(FilePathConfig.ASSEMBLY_LANGUAGE_PATH);
     }
 }
