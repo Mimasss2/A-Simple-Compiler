@@ -78,6 +78,10 @@ public class Instruction {
         ensureKindMatch(Set.of(InstructionKind.RET));
         return operands.get(0);
     }
+    public List<IRValue> getAllOperands() {
+        return operands;
+    }
+
 
 
     //============================== 基础设施 ==============================
