@@ -6,6 +6,12 @@ import cn.edu.hitsz.compiler.ir.IRVariable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Mimas
+ * 寄存器分配器，
+ * 随机分配t0-t6的空闲寄存器， 释放不再需要的寄存器
+ * 其中regMap存储IRVariable变量到寄存器 的映射
+ */
 public class RegisterAssigner {
     private final String returnReg = "a0";
     private List<String> freeRegs = new ArrayList<>();

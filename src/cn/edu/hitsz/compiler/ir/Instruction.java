@@ -74,6 +74,7 @@ public class Instruction {
         return operands.get(0);
     }
 
+    // 仅 AssemblyGenerater 在检查变量最后一次出现的位置时使用
     public IRValue getReturnValue() {
         ensureKindMatch(Set.of(InstructionKind.RET));
         return operands.get(0);

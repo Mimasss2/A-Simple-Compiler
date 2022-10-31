@@ -7,6 +7,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * riscv汇编指令类
+ */
 public class AsmInstruction {
     public static AsmInstruction createAdd(String result, String lhs, String rhs) {
         return new AsmInstruction(AsmInstructionKind.ADD, result, List.of(lhs, rhs));
@@ -47,38 +50,12 @@ public class AsmInstruction {
         return new AsmInstruction(AsmInstructionKind.LI, result, List.of(imm));
     }
 
+    /**
+     * @return ".text" 汇编代码段开始标识符
+     */
     public static AsmInstruction createStart() {
         return new AsmInstruction(AsmInstructionKind.START, null, null);
     }
-
-    //============================== 不同种类 IR 的参数 getter ==============================
-    public AsmInstructionKind getKind() {
-        return kind;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-//    public String getLHS() {
-//        ensureKindMatch(Set.of(InstructionKind.ADD, InstructionKind.SUB, InstructionKind.MUL));
-//        return operands.get(0);
-//    }
-//
-//    public String getRHS() {
-//        ensureKindMatch(Set.of(InstructionKind.ADD, InstructionKind.SUB, InstructionKind.MUL));
-//        return operands.get(1);
-//    }
-//
-//    public String getFrom() {
-//        ensureKindMatch(Set.of(InstructionKind.MOV));
-//        return operands.get(0);
-//    }
-//
-//    public String getReturnValue() {
-//        ensureKindMatch(Set.of(InstructionKind.RET));
-//        return operands.get(0);
-//    }
 
 
     //============================== 基础设施 ==============================
@@ -100,9 +77,6 @@ public class AsmInstruction {
         return "\t%s %s, %s".formatted(kindString, resultString, operandsString);
     }
 
-    public List<String> getOperands() {
-        return Collections.unmodifiableList(operands);
-    }
 
     private AsmInstruction(AsmInstructionKind kind, String result, List<String> operands) {
         this.kind = kind;
@@ -114,15 +88,4 @@ public class AsmInstruction {
     private final String result;
     private final List<String> operands;
 
-    private void ensureKindMatch(Set<AsmInstructionKind> targetKinds) {
-        final var kind = getKind();
-        if (!targetKinds.contains(kind)) {
-            final var acceptKindsString = targetKinds.stream()
-                    .map(AsmInstructionKind::toString)
-                    .collect(Collectors.joining(","));
-
-            throw new RuntimeException(
-                    "Illegal operand access, except %s, but given %s".formatted(acceptKindsString, kind));
-        }
-    }
 }

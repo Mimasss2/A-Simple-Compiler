@@ -39,10 +39,8 @@ public class AssemblyGenerator {
      */
     public void loadIR(List<Instruction> originInstructions) {
         // pre process
-        // TODO: add variable reference info
-        int i = 0;
         Instruction inst, newInst;
-        for(i=0; i<originInstructions.size(); i++) {
+        for(int i=0; i<originInstructions.size(); i++) {
             inst = originInstructions.get(i);
             IRValue lhs,rhs;
             InstructionKind kind = inst.getKind();
@@ -50,11 +48,13 @@ public class AssemblyGenerator {
                 IRVariable res = inst.getResult();
                 lhs = inst.getLHS();
                 rhs = inst.getRHS();
+                // 若两操作数均为立即数，直接改为MOV指令
                 if(lhs.isImmediate() && rhs.isImmediate()) {
                     int value = ((IRImmediate)lhs).getValue() + ((IRImmediate)rhs).getValue();
                     newInst = Instruction.createMov(res, IRImmediate.of(value));
                     processedInstructions.add(newInst);
                 } else if (lhs.isImmediate()) {
+                    // 合法情况下，将左立即数移动到右立即数
                     switch (kind) {
                         case ADD :{
                             newInst = Instruction.createAdd(res, rhs, lhs);
@@ -83,6 +83,7 @@ public class AssemblyGenerator {
                         }
                     }
                 } else if (rhs.isImmediate()) {
+                    // MUL指令中的立即数以变量形式出现
                     if (kind == InstructionKind.MUL) {
                         IRVariable temp = IRVariable.temp();
                         newInst = Instruction.createMov(temp, rhs);
@@ -105,11 +106,15 @@ public class AssemblyGenerator {
         assessLastUse();
     }
 
+    /**
+     * 记录每个变量最后出现的位置，以便生成代码时及时释放寄存器
+     */
     private void assessLastUse() {
         List<IRVariable> appearedVariables = new ArrayList<>();
         Instruction inst;
         IRValue rs1, rs2;
         List<IRValue> operands;
+        // 从后向前遍历，寻找变量最后出现的位置
         for(int i=processedInstructions.size()-1; i >= 0; i--) {
             inst = processedInstructions.get(i);
             operands = inst.getOperands();
@@ -249,6 +254,7 @@ public class AssemblyGenerator {
                 }
             }
 
+            // 变量不再使用到时，及时释放寄存器
             if(isRs1LastUse.get(i)) {
                 ass.freeReg((IRVariable) inst.getAllOperands().get(0));
             }
@@ -264,7 +270,7 @@ public class AssemblyGenerator {
      * @param path 输出文件路径
      */
     public void dump(String path) {
-        // TODO: 输出汇编代码到文件
+        // 输出汇编代码到文件
         FileUtils.writeLines("data/out/intermediate_code_s2.txt",
                 processedInstructions.stream().map(Instruction::toString).toList());
         asmInstructions.add(0, AsmInstruction.createStart());
