@@ -271,8 +271,8 @@ public class AssemblyGenerator {
      */
     public void dump(String path) {
         // 输出汇编代码到文件
-        FileUtils.writeLines("data/out/intermediate_code_s2.txt",
-                processedInstructions.stream().map(Instruction::toString).toList());
+//        FileUtils.writeLines("data/out/intermediate_code_s2.txt",
+//                processedInstructions.stream().map(Instruction::toString).toList());
         asmInstructions.add(0, AsmInstruction.createStart());
         FileUtils.writeLines(path, asmInstructions.stream().map(AsmInstruction::toString).toList());
     }

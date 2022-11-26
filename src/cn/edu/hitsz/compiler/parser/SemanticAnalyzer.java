@@ -71,7 +71,6 @@ public class SemanticAnalyzer implements ActionObserver {
         // TODO: 该过程在遇到 shift 时要采取的代码动作
         tokenStack.push(currentToken);
         if(currentToken.getKind().getIdentifier().equals("int")) {
-//            System.out.println("scanning int");
             typeStack.push(SourceCodeType.Int);
         }
         else {
